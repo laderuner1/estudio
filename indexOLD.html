@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CIRCAR Procesar</title>
+	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'><link rel="stylesheet" href="css/style.css">
+	<script src="JS/jquery/jquery-3.5.1.min.js" type="text/javascript"></script> 
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+</head>
+<body>
+<div class="action_container">
+	<div><input type="file" name="file" id="file"><p></p></div>
+		<div>
+		<!-- <p><a href="javascript:fillArray();"><span>Procesar Archivo</span></a></p>
+		<a href="javascript:downloadFileCSV();"><span>Exportar a CSV para CIRCAR</span></a> -->
+
+		<ul>
+		  <li><a href="javascript:if(Array_date[0] == 0){fillArray();}" id="process_id">Procesar Archivo</a></li>
+		  <li><a href="javascript:pop();">Exportar a CSV para CIRCAR</a></li>
+		  <!-- <li><a href="#contact">Contact</a></li>
+		  <li><a href="#about">About</a></li> -->
+		</ul>
+
+		</div>
+	</div>
+
+</div> <!--End Action Container Class CSS  -->
+<div>
+	<p></p>
+<!-- 
+<table id="table_id">
+  <caption>Facturacón</caption>
+  <thead>
+    <tr>
+      <th scope="col">Tip0 Comprobante</th>
+      <th scope="col">Número Factura</th>
+      <th scope="col">CUIT</th>
+      <th scope="col">Fecha</th>
+      <th scope="col">Importe Total</th>
+    </tr>
+  </thead>
+</table> -->
+<div id="main"> 
+
+
+</div>
+<div id="MONTO_ID">
+	<span>Total Monto Retenido</span>
+</div>
+<div style="text-align:center;">
+  <!-- <a href="#" onclick="pop()">Click</a> -->
+  <!-- <div class="popup" id="idPopPup">
+    <span class="popuptext" id="myPopup">
+      Periodo: <input type="text" name="" value id="nameFile">
+      <button onclick="downloadFileCSV()">Aceptar</button>
+      <button onclick="pop()">Cancelar</button>
+    </span>
+  </div> -->
+  <!-- <button id="myBtn">Open Modal</button> -->
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    Nombre y Periodo: <input type="text" name="" value id="nameFile">
+      <button onclick="downloadFileCSV()">Aceptar</button>
+     <!--  <button onclick="pop()">Cancelar</button> -->
+  </div>
+
+</div>
+</div>
+<div id="TOTAL_ID"></div>
+</div>
+
+<script src="JS/readFile_v2.js"></script>
+<script type="text/javascript">
+	
+</script>
+
+</body>
+</html>

@@ -35,6 +35,7 @@ function htmlDecode(input) {
 }
 /****************************************************************************************************/
 /****************************************************************************************************/
+/*
 function createTable(tableData) {
   var textfield = document.createElement("input");
   textfield.type = "text";
@@ -88,6 +89,89 @@ function createTable(tableData) {
   divRows.innerHTML = $('table tbody tr').length;
   document.getElementById("NUM_ROWS").appendChild(divRows);
   //document.getElementById("TOTAL_PERC").appendChild(div);
+}
+*/
+// Función para eliminar acentos y caracteres especiales
+function eliminarAcentos(texto) {
+  return texto
+      .normalize("NFD") // Descompone el texto en base y diacríticos
+      .replace(/[\u0300-\u036f]/g, "") // Elimina los diacríticos (acentos)
+      .replace(/[^\w\s]/g, "") // Elimina caracteres especiales
+      .replace(/\s+/g, "_") // Reemplaza espacios por guiones bajos
+      .toLowerCase(); // Convierte el texto a minúsculas
+}
+
+function createTable(tableData) {
+  var textfield = document.createElement("input");
+  textfield.type = "text";
+  textfield.value = "";
+  textfield.name = "monto";
+
+  var div = document.createElement("div");
+  var divRows = document.createElement("div");
+
+  div.innerHTML = financial(total);
+
+  var table = document.createElement('table');
+  var tableBody = document.createElement('tbody');
+  var thead = document.createElement('thead');
+
+  table.appendChild(thead);
+
+  // Crear encabezados de la tabla
+  let headerIDs = []; // Array para guardar los IDs de las cabeceras
+
+  for (var i = 0; i < orderArrayHeader.length; i++) {
+      // Crear el elemento <th>
+      var th = document.createElement("th");
+      
+      // Normalizar el texto y generar el ID
+      var headerID = eliminarAcentos(orderArrayHeader[i]);
+      th.id = headerID;
+
+      // Agregar el texto a la cabecera
+      th.appendChild(document.createTextNode(orderArrayHeader[i]));
+
+      // Agregar el <th> al <thead>
+      thead.appendChild(th);
+
+      // Guardar el ID en el array
+      headerIDs.push(headerID);
+  }
+
+  // Crear filas de la tabla
+  tableData.forEach(function (rowData, v) {
+      var row = document.createElement('tr');
+
+      // Crear la primera celda con el checkbox
+      var checkboxCell = document.createElement('td');
+      var checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.classList.add("remove-checkbox");
+      checkboxCell.appendChild(checkbox);
+      checkboxCell.setAttribute("headers", headerIDs[0]); // Asignar headers al checkbox
+      row.appendChild(checkboxCell);
+
+      // Crear las demás celdas con los datos de la fila
+      rowData.forEach(function (cellData, index) {
+          var cell = document.createElement('td');
+          cell.appendChild(document.createTextNode(cellData));
+
+          // Asignar el atributo "headers" referenciando al ID de la cabecera
+          cell.setAttribute("headers", headerIDs[index + 1]); // +1 porque la primera celda es el checkbox
+
+          row.appendChild(cell);
+      });
+
+      tableBody.appendChild(row);
+  });
+
+  table.appendChild(tableBody);
+  document.getElementById("main").appendChild(table);
+  document.getElementById("TOTAL_ID").appendChild(div);
+
+  divRows.innerHTML = $('table tbody tr').length;
+  document.getElementById("NUM_ROWS").appendChild(divRows);
 }
 
 /****************************************************************************************************/
@@ -458,6 +542,30 @@ function removerFilas() {
 }
 /****************************************************************************************************/
 /****************************************************************************************************/
+function refreshCalculation(){
+        // Selecciona el elemento TOTAL_PERC
+        const totalDiv     = document.getElementById("TOTAL_ID");
+        const divRows      = document.getElementById("NUM_ROWS");
+        //const totalDivPerc = document.getElementById("TOTAL_PERC");
+
+      // Mientras el elemento tenga un primer hijo, lo elimina
+          while (totalDiv.firstChild) {
+            totalDiv.removeChild(totalDiv.firstChild);
+          }/*
+          while (totalDivPerc.firstChild) {
+            totalDivPerc.removeChild(totalDivPerc.firstChild);
+          }*/
+
+      var div = document.createElement("div");
+      div.innerHTML = reCalcularPerc();
+
+      document.getElementById("TOTAL_ID").appendChild(div);
+      //document.getElementById("TOTAL_PERC").appendChild(div);
+      divRows.innerHTML = $('table tbody tr').length;
+      document.getElementById("NUM_ROWS").appendChild(divRows);
+      }
+/****************************************************************************************************/
+/****************************************************************************************************/
 function reCalcularPerc(){
   var reCalculo = financial(0);
 
@@ -474,3 +582,36 @@ function reCalcularPerc(){
 }
 /****************************************************************************************************/
 /****************************************************************************************************/
+ // Función para mostrar el PopUp
+ function mostrarPopUp() {
+  document.getElementById("modalPopUp").style.display = "block";
+}
+/****************************************************************************************************/
+/****************************************************************************************************/
+// Función para cerrar el PopUp
+function cerrarPopUp() {
+  document.getElementById("modalPopUp").style.display = "none";
+}
+/****************************************************************************************************/
+/****************************************************************************************************/
+// Función para eliminar filas basadas en los números ingresados
+function eliminarFacturas() {
+  // Obtener la lista de facturas ingresada y formatear
+  const listaFacturas = document.getElementById("listaFacturas").value
+      .split("\n") // Separar por líneas
+      .map(factura => factura.trim()) // Eliminar espacios en blanco
+      .filter(factura => factura.length > 0) // Eliminar líneas vacías
+      .map(factura => parseInt(factura, 10)); // Convertir a número (ignorar ceros a la izquierda)
+
+  // Obtener las filas de la tabla
+  const filas = document.querySelectorAll("table tbody tr");
+
+  filas.forEach(fila => {
+      const numeroFactura = parseInt(fila.cells[4].innerText.trim(), 10); // Eliminar ceros al convertir a entero
+      if (listaFacturas.includes(numeroFactura)) {
+          fila.remove(); // Eliminar la fila si coincide
+      }
+  });
+  refreshCalculation();
+  cerrarPopUp(); // Cerrar el PopUp después de procesar
+}
